@@ -1,0 +1,72 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 15, 30, 0.78);
+  backdrop-filter: blur(3px);
+  animation: fade 0.2s ease-out;
+}
+
+.dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: min(90vw, 760px);
+  max-height: 88vh;
+  padding: 12px;
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 6px;
+}
+
+h3 { margin: 0 0 8px; font-size: 15px; overflow-wrap: anywhere; }
+
+pre {
+  margin: 0;
+  padding: 10px;
+  max-height: 68vh;
+  overflow: auto;
+  background: var(--bar);
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 13px/1.5 ui-monospace, Consolas, monospace;
+}
+
+.hint { color: var(--muted); margin: 0; }
+.err { color: var(--danger); margin: 0; }
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}

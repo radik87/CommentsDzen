@@ -1,0 +1,64 @@
+@if (api.loading()) {
+  <p class="hint">Загружаем комментарии…</p>
+}
+@if (api.loadFailed()) {
+  <p class="err" role="alert">
+    Не удалось загрузить комментарии.
+    <button type="button" class="link" (click)="api.load()">Повторить</button>
+  </p>
+}
+
+<div class="scroll">
+  <table>
+    <thead>
+      <tr>
+        <th [attr.aria-sort]="ariaSort('userName')">
+          <button type="button" (click)="sortBy('userName')">User Name {{ arrow('userName') }}</button>
+        </th>
+        <th [attr.aria-sort]="ariaSort('email')">
+          <button type="button" (click)="sortBy('email')">E-mail {{ arrow('email') }}</button>
+        </th>
+        <th [attr.aria-sort]="ariaSort('createdAt')">
+          <button type="button" (click)="sortBy('createdAt')">Дата {{ arrow('createdAt') }}</button>
+        </th>
+        <th><span class="plain">Комментарий</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of sorted(); track c.id) {
+        <tr>
+          <td>{{ c.user.userName }}</td>
+          <td>{{ c.user.email }}</td>
+          <td class="nowrap">{{ c.createdAt | date: 'dd.MM.yy HH:mm' }}</td>
+          <td><app-comment-item [comment]="c" [showHeader]="false" /></td>
+        </tr>
+      } @empty {
+        @if (!api.loading()) {
+          <tr><td colspan="4" class="hint">Пока нет комментариев. Напишите первый.</td></tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+<nav class="pager" aria-label="Страницы">
+  <button
+    type="button"
+    (click)="prevPage()"
+    [disabled]="api.loading() || api.pageNumber() <= 1"
+  >
+    ‹ Назад
+  </button>
+
+  <span class="pager-info">
+    Страница {{ api.pageNumber() }} из {{ api.totalPages() }} · всего комментариев: {{ api.totalItems() }}
+  </span>
+
+  <button
+    type="button"
+    (click)="nextPage()"
+    [disabled]="api.loading() || api.pageNumber() >= api.totalPages()"
+  >
+    Вперёд ›
+  </button>
+</nav>

@@ -1,0 +1,65 @@
+form { display: grid; gap: 12px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.wide { grid-column: 1 / -1; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+label { display: grid; gap: 4px; font-size: 14px; }
+label > span { color: var(--muted); }
+
+input, textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font: inherit;
+  background: var(--surface);
+  color: var(--ink);
+}
+textarea { resize: vertical; }
+
+.toolbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.toolbar button {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bar);
+}
+.spacer { flex: 1; }
+
+.preview {
+  padding: 10px 12px;
+  background: var(--bar);
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+}
+
+.err { color: var(--danger); margin: 0; }
+
+.primary {
+  justify-self: start;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+}
+.primary:disabled { opacity: .6; cursor: default; }
+
+.captcha-row { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.captcha-row label { flex: 1; min-width: 160px; }
+.captcha-input { text-transform: uppercase; letter-spacing: 0.15em; }
+
+.file-block { display: grid; gap: 6px; }
+.hint { color: var(--muted); }
+.file-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 8px;
+  background: var(--bar);
+  border-radius: var(--radius);
+}
+.file-info img { max-width: 96px; max-height: 72px; border-radius: 4px; }
+.file-name { font-size: 14px; overflow-wrap: anywhere; }
+.link { margin-left: auto; padding: 0; border: 0; background: none; color: var(--accent); }
+.link:hover { text-decoration: underline; }

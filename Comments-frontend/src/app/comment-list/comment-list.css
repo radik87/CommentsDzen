@@ -1,0 +1,36 @@
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--bar); padding: 0; }
+th button, .plain {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 0;
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+}
+.nowrap { white-space: nowrap; }
+.hint { color: var(--muted); }
+.err { color: var(--danger); }
+.link { background: none; border: 0; color: var(--accent); padding: 0; }
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.pager button {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bar);
+  color: var(--ink);
+}
+.pager button:disabled { opacity: .5; cursor: default; }
+.pager-info { font-size: 14px; color: var(--muted); }

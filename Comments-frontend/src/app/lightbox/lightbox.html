@@ -1,0 +1,26 @@
+@if (lb.current(); as item) {
+  <div class="backdrop" (click)="close()">
+    <div
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="item.name"
+      (click)="$event.stopPropagation()"
+    >
+      <button #closeBtn type="button" class="close" (click)="close()" aria-label="Закрыть">×</button>
+
+      @if (item.kind === 'image') {
+        <img [src]="item.url" [alt]="item.name" />
+      } @else {
+        <h3>{{ item.name }}</h3>
+        @if (failed()) {
+          <p class="err">Не удалось загрузить файл.</p>
+        } @else if (text() === null) {
+          <p class="hint">Загрузка…</p>
+        } @else {
+          <pre>{{ text() }}</pre>
+        }
+      }
+    </div>
+  </div>
+}

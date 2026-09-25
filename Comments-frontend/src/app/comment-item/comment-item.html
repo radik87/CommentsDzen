@@ -1,0 +1,39 @@
+@if (showHeader()) {
+  <header class="head">
+    <strong>{{ comment().user.userName }}</strong>
+    <time>{{ comment().createdAt | date: 'dd.MM.yy HH:mm' }}</time>
+    @if (homeHref(); as href) {
+      <a [href]="href" target="_blank" rel="noopener noreferrer">сайт</a>
+    }
+  </header>
+}
+
+<div class="text" [innerHTML]="comment().text | safeComment"></div>
+
+@if (attachment(); as a) {
+  <div class="attachment">
+    @if (a.kind === 'image') {
+      <button type="button" class="thumb" (click)="openAttachment(a, $event)" aria-label="Открыть изображение">
+        <img [src]="a.url" [alt]="a.name" loading="lazy" />
+      </button>
+    } @else {
+      <button type="button" class="file" (click)="openAttachment(a, $event)" [attr.title]="a.name">
+        <span class="badge">TXT</span> Открыть файл
+      </button>
+    }
+  </div>
+}
+
+<button type="button" class="link" (click)="replying.update(v => !v)">
+  {{ replying() ? 'Отмена' : 'Ответить' }}
+</button>
+
+@if (replying()) {
+  <div class="reply-form">
+    <app-comment-form [parentId]="comment().id" (created)="replying.set(false)" />
+  </div>
+}
+
+@for (r of comment().replies; track r.id) {
+  <app-comment-item class="reply" [comment]="r" />
+}

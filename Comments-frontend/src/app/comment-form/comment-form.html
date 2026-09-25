@@ -1,0 +1,125 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="grid">
+    <label>
+      <span>User Name *</span>
+      <input formControlName="userName" autocomplete="username" />
+      @if (invalid('userName')) {
+        <small class="err">Только латинские буквы и цифры</small>
+      }
+    </label>
+
+    <label>
+      <span>E-mail *</span>
+      <input formControlName="email" type="email" autocomplete="email" />
+      @if (invalid('email')) {
+        <small class="err">Введите e-mail в формате name&#64;example.com</small>
+      }
+    </label>
+
+    <label class="wide">
+      <span>Home page</span>
+      <input formControlName="homePage" placeholder="https://example.com" />
+      @if (invalid('homePage')) {
+        <small class="err">Введите корректный адрес сайта</small>
+      }
+    </label>
+  </div>
+
+  <div class="toolbar" role="toolbar" aria-label="Теги">
+    <button type="button" (click)="wrap('i')"><i>[i]</i></button>
+    <button type="button" (click)="wrap('strong')"><strong>[strong]</strong></button>
+    <button type="button" (click)="wrap('code')"><code>[code]</code></button>
+    <button type="button" (click)="wrap('a')">[a]</button>
+    <span class="spacer"></span>
+    <button type="button" (click)="showPreview.update(v => !v)">
+      {{ showPreview() ? 'Скрыть предпросмотр' : 'Предпросмотр' }}
+    </button>
+  </div>
+
+  <label>
+    <span>Текст *</span>
+    <textarea #ta formControlName="text" rows="4"></textarea>
+    @if (invalid('text')) {
+      <small class="err">
+        @if (form.controls.text.errors?.['forbiddenTag']; as t) {
+          Тег &lt;{{ t }}&gt; не разрешён. Доступны: a, code, i, strong.
+        } @else if (form.controls.text.errors?.['unclosedTag']) {
+          Закройте все теги в правильном порядке.
+        } @else {
+          Введите текст комментария.
+        }
+      </small>
+    }
+  </label>
+
+  @if (showPreview()) {
+    <div class="preview" [innerHTML]="form.controls.text.value | safeComment"></div>
+  }
+
+  <div class="file-block">
+    <label>
+      <span>Файл (JPG, GIF, PNG — до 320×240, TXT — до 100 КБ)</span>
+      <input
+        #fileInput
+        type="file"
+        accept=".jpg,.jpeg,.png,.gif,.txt"
+        (change)="onFileSelected($event)"
+      />
+    </label>
+
+    @if (preparing()) {
+      <small class="hint">Обрабатываем файл…</small>
+    }
+    @if (fileError(); as msg) {
+      <small class="err" role="alert">{{ msg }}</small>
+    }
+    @if (attachment(); as a) {
+      <div class="file-info">
+        @if (previewUrl(); as url) {
+          <img [src]="url" alt="Предпросмотр вложения" />
+        }
+        <div>
+          <div class="file-name">{{ a.file.name }}</div>
+          <small class="hint">
+            {{ sizeKb(a.file.size) }} КБ
+            @if (a.resized) {
+              · изображение уменьшено до допустимого размера
+            }
+          </small>
+        </div>
+        <button type="button" class="link" (click)="clearFile()">Убрать</button>
+      </div>
+    }
+  </div>
+
+  <div class="captcha-row">
+    <app-captcha (refreshed)="onCaptchaRefreshed()" />
+    <label>
+      <span>CAPTCHA *</span>
+      <input
+        class="captcha-input"
+        formControlName="captcha"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+      />
+      @if (invalid('captcha')) {
+        <small class="err">
+          @if (form.controls.captcha.errors?.['required']) {
+            Введите символы с картинки.
+          } @else {
+            Символы введены неверно.
+          }
+        </small>
+      }
+    </label>
+  </div>
+
+  @if (error()) {
+    <p class="err" role="alert">{{ error() }}</p>
+  }
+
+  <button type="submit" class="primary" [disabled]="submitting() || preparing()">
+    {{ submitting() ? 'Отправляем…' : 'Отправить' }}
+  </button>
+</form>
