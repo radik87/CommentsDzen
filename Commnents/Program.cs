@@ -3,10 +3,19 @@ using Commnents.Models;
 using Commnents.Repository;
 using Commnents.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+        .WriteTo.Console()
+        .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+        .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddCors(options =>
 {
