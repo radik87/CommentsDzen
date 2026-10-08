@@ -6,6 +6,7 @@ namespace Commnents.Models
     {
         [Key]
         public Guid Id { get; set; } = new Guid();
+
         [Required]
         public string Text { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
@@ -14,6 +15,7 @@ namespace Commnents.Models
         public string? FileType { get; set; }
 
         public Guid UserId { get; set; }
+
         [Required]
         public User User { get; set; }
         public Guid? ParentId { get; set; }

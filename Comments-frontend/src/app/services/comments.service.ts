@@ -4,7 +4,6 @@ import { tap } from 'rxjs';
 import { CommentDto, CreateCommentRequest, PagedComments } from '../models/comment.model';
 
 export const route = 'https://localhost:44304/';
-//export const route = 'https://commentsapi-bbgqb3g7gwdyfhbu.westus3-01.azurewebsites.net/';
 const endPoint = `${route}api/Comment/`;
 const DEFAULT_PAGE_SIZE = 25;
 

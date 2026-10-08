@@ -1,22 +1,26 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 
-namespace Commnents.Services
+namespace Commnents.Infrastructure
 {
-    public class CloudinaryImageUploadService
+    public class CloudinaryImageService
     {
-        const string Cloud = "lpksjyhd";
-        const string ApiKey = "366749331539276";
-        const string ApiSecret = "uzxnSFmr2_q5GlzI8ZaeSKQKD3k";
-
         private readonly Cloudinary _cloudinary;
-        private readonly string[] _allowedImageExtensions = { ".txt", ".jpg", ".jpeg", ".gif", ".png" };
+        private readonly IConfiguration _configuration;
+        private readonly string[] _allowedImageExtensions = {".jpg", ".jpeg", ".gif", ".png" };
 
-        public CloudinaryImageUploadService()
+        public CloudinaryImageService(IConfiguration configuration)
         {
-            Account account = new Account(Cloud, ApiKey, ApiSecret);
+            _configuration = configuration;
+
+            Account account = new Account(
+                _configuration.GetValue<string>("Cloudinary:Cloud"),
+                _configuration.GetValue<string>("Cloudinary:ApiKey"),
+                _configuration.GetValue<string>("Cloudinary:ApiSecret"));
+
             _cloudinary = new Cloudinary(account);
             _cloudinary.Api.Secure = true;
+            
         }
 
         public async Task<string> Upload(IFormFile file)

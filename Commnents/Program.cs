@@ -1,4 +1,6 @@
 using CommentsApp.Core.Services;
+
+using Commnents.Infrastructure;
 using Commnents.Models;
 using Commnents.Repository;
 using Commnents.Services;
@@ -41,8 +43,9 @@ builder.Services.AddDbContext<CommentContext>(options =>
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<HtmlSanitizerService>();
-builder.Services.AddScoped<CloudinaryImageUploadService>();
+builder.Services.AddScoped<CloudinaryImageService>();
 
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -69,7 +72,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
+app.MapHub<CommentHub>("/commentHub");
 app.UseCors("cors");
 app.UseHttpsRedirection();
 app.UseRouting();

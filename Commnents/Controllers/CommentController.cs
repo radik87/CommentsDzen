@@ -1,10 +1,12 @@
 ﻿using CommentsApp.Core.Services;
 
 using Commnents.Constans;
+using Commnents.Infrastructure;
 using Commnents.Models;
 using Commnents.Services;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 
 namespace Commnents.Controllers
@@ -15,14 +17,16 @@ namespace Commnents.Controllers
     {
         private readonly CommentService _commentService;
         private readonly HtmlSanitizerService _htmlSanitizerService;
-        private readonly CloudinaryImageUploadService _cloudinaryImageUploadService;
+        private readonly CloudinaryImageService _cloudinaryImageService;
+        private readonly IHubContext<CommentHub> _hubContext;
 
         public CommentController(CommentService commentService, HtmlSanitizerService htmlSanitizerService,
-            CloudinaryImageUploadService cloudinaryImageUploadService)
+            CloudinaryImageService cloudinaryImageService, IHubContext<CommentHub> hubContext)
         {
             _commentService = commentService;
             _htmlSanitizerService = htmlSanitizerService;
-            _cloudinaryImageUploadService = cloudinaryImageUploadService;
+            _cloudinaryImageService = cloudinaryImageService;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -38,7 +42,7 @@ namespace Commnents.Controllers
             {
                 if (file != null)
                 {
-                    comment.FilePath = await _cloudinaryImageUploadService.Upload(file);
+                    comment.FilePath = await _cloudinaryImageService.Upload(file);
                     comment.FileType = file.ContentType;
                 }
             }
@@ -49,9 +53,16 @@ namespace Commnents.Controllers
 
             comment.Text = _htmlSanitizerService.Clean(comment.Text);
 
-            return (_htmlSanitizerService.IsValidXhtml(comment.Text))
-                ? Json(await _commentService.Create(comment))
-                : BadRequest("invalid XHTML check text your message");
+            if (_htmlSanitizerService.IsValidXhtml(comment.Text))
+            {
+                await _commentService.Create(comment);
+
+                await _hubContext.Clients.All.SendAsync("ReceiveComment", comment);
+
+                return Json(comment);
+            }
+
+            return BadRequest("invalid XHTML check text your message");
         }
 
         // method for mock data
