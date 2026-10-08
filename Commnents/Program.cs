@@ -72,7 +72,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapHub<CommentHub>("/commentHub");
 app.UseCors("cors");
 app.UseHttpsRedirection();
 app.UseRouting();
