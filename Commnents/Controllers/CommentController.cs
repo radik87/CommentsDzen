@@ -1,8 +1,11 @@
 ﻿using CommentsApp.Core.Services;
+
 using Commnents.Constans;
 using Commnents.Models;
 using Commnents.Services;
+
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Commnents.Controllers
 {
@@ -12,13 +15,14 @@ namespace Commnents.Controllers
     {
         private readonly CommentService _commentService;
         private readonly HtmlSanitizerService _htmlSanitizerService;
-        private readonly FileService _fileService;
+        private readonly CloudinaryImageUploadService _cloudinaryImageUploadService;
 
-        public CommentController(CommentService commentService, HtmlSanitizerService htmlSanitizerService, FileService fileService)
+        public CommentController(CommentService commentService, HtmlSanitizerService htmlSanitizerService,
+            CloudinaryImageUploadService cloudinaryImageUploadService)
         {
             _commentService = commentService;
             _htmlSanitizerService = htmlSanitizerService;
-            _fileService = fileService;
+            _cloudinaryImageUploadService = cloudinaryImageUploadService;
         }
 
         [HttpGet]
@@ -30,16 +34,17 @@ namespace Commnents.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] Comment comment, [FromForm] IFormFile? file)
         {
-            if (file != null)
+            try
             {
-                try
+                if (file != null)
                 {
-                    comment = await _fileService.SaveFile(comment, file);
+                    comment.FilePath = await _cloudinaryImageUploadService.Upload(file);
+                    comment.FileType = file.ContentType;
                 }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
             comment.Text = _htmlSanitizerService.Clean(comment.Text);

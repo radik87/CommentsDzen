@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-        .MinimumLevel.Information()
+        .MinimumLevel.Warning()
         .WriteTo.Console()
         .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
         .CreateLogger();
@@ -34,13 +34,15 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
+
 builder.Services.AddDbContext<CommentContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<HtmlSanitizerService>();
-builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<CloudinaryImageUploadService>();
+
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
