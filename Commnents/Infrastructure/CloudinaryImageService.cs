@@ -25,7 +25,7 @@ namespace Commnents.Infrastructure
 
         public async Task<string> Upload(IFormFile file)
         {
-            string imageUrls;
+            string imageUrl;
 
             string ext = Path.GetExtension(file.FileName).ToLower();
 
@@ -47,8 +47,8 @@ namespace Commnents.Infrastructure
                     throw new Exception($"Cloudinary error occured: {result.Error.Message}");
                 }
 
-                imageUrls = result.SecureUrl.ToString();
-                return imageUrls;
+                imageUrl = result.SecureUrl.ToString();
+                return imageUrl;
             }
 
             else

@@ -1,5 +1,4 @@
 using CommentsApp.Core.Services;
-
 using Commnents.Infrastructure;
 using Commnents.Models;
 using Commnents.Repository;
@@ -12,7 +11,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-        .MinimumLevel.Warning()
+        .MinimumLevel.Information()
         .WriteTo.Console()
         .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
         .CreateLogger();
@@ -44,8 +43,6 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<HtmlSanitizerService>();
 builder.Services.AddScoped<CloudinaryImageService>();
-
-builder.Services.AddSignalR();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

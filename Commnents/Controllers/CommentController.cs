@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Commnents.Controllers
 {
-    [Route(RouteConst.Default)]
+    [Route(Routes.Default)]
     [ApiController]
     public class CommentController : Controller
     {
@@ -50,7 +50,7 @@ namespace Commnents.Controllers
 
             return (_htmlSanitizerService.IsValidXhtml(comment.Text))
                ? Json(await _commentService.Create(comment))
-               : BadRequest("invalid XHTML check text your message");
+               : BadRequest("invalid XHTML");
         }
 
 

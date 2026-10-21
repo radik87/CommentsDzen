@@ -1,6 +1,6 @@
 ﻿namespace Commnents.Constans
 {
-    public class RouteConst
+    public class Routes
     {
         public const string Default = "api/[controller]";
     }

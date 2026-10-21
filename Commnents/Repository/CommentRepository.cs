@@ -29,6 +29,7 @@ namespace Commnents.Repository
             }
 
             int commentsCount = await _commentContext.Comments.CountAsync();
+
             const int pageSize = 25;
 
             List<Comment> commentsPaged = await _commentContext.Comments
